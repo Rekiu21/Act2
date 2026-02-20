@@ -1,0 +1,29 @@
+.venv/
+__pycache__/
+**/__pycache__/
+*.pyc
+
+# Editor/OS
+.vscode/
+.DS_Store
+
+# Docs no relevantes para este repo
+Act1.pdf
+Act1.docx
+
+# Datos de entrada muy pesados
+fund_big_data/act 2/*.log
+fund_big_data/20250929-enroll.log
+
+# Outputs grandes (mantener solo lo necesario para la demo)
+fund_big_data/out_full/*
+!fund_big_data/out_full/web/
+!fund_big_data/out_full/web/**
+!fund_big_data/out_full/stats.json
+!fund_big_data/out_full/summary.json
+
+fund_big_data/out_full_v2/*
+!fund_big_data/out_full_v2/stats.json
+
+# Otros outputs
+fund_big_data/out_focus_test/

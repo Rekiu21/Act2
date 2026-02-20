@@ -1,0 +1,5 @@
+- Proyecto: normalización de logs JSON/NDJSON a tablas con pandas.
+- Objetivo: leer un archivo grande con objetos JSON (uno por línea o concatenados), producir tablas (events, faces, sources) y exportarlas como JSON listo para cálculos y para una web.
+- Comando principal: `python -m logtool parse --input <ruta_al_archivo> --out out`
+- Mantener el código simple, sin dependencias innecesarias.
+- Preferir salida JSON (records) y opcional JSONL/CSV.

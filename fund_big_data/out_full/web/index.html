@@ -1,0 +1,829 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ACT 2</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --panel: rgba(255, 255, 255, 0.9);
+      --panel-2: rgba(255, 255, 255, 0.7);
+      --text: #1e293b;
+      --muted: #64748b;
+      --line: #e2e8f0;
+      --accent: #ec4899;
+      --accent-bright: #f472b6;
+      --accent-purple: #a855f7;
+      --blue: #3b82f6;
+      --danger: #dc2626;
+      --code-bg: linear-gradient(135deg, #faf5ff 0%, #fdf4ff 100%);
+      --code-line: #f3e8ff;
+      --glow: rgba(236, 72, 153, 0.3);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Segoe UI", "Fira Code", "JetBrains Mono", monospace, Arial, sans-serif;
+      background:
+        radial-gradient(1400px 900px at 10% -8%, rgba(251, 207, 232, 0.15) 0%, transparent 55%),
+        radial-gradient(1200px 800px at 92% 5%, rgba(249, 168, 212, 0.12) 0%, transparent 50%),
+        radial-gradient(900px 700px at 50% 98%, rgba(244, 114, 182, 0.08) 0%, transparent 60%),
+        #ffffff;
+      color: var(--text);
+      line-height: 1.4;
+    }
+
+    .container {
+      width: 100%;
+      max-width: none;
+      margin: 0;
+      padding: 28px clamp(14px, 2.2vw, 28px) 28px;
+    }
+
+    /* Header sin "bloque" de fondo */
+    .hero {
+      background: transparent;
+      border: 0;
+      padding: 6px 2px 14px;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(28px, 4vw, 44px);
+      letter-spacing: 1px;
+      display: inline-block;
+      position: relative;
+      color: #1e1b4b;
+      font-weight: 800;
+    }
+
+    h1::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -8px;
+      height: 3px;
+      width: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent) 0%, var(--accent-bright) 100%);
+    }
+
+    .subtitle {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 16px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.03);
+    }
+
+    .panel h2 {
+      margin: 0 0 10px;
+      font-size: 18px;
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .table-wrap {
+      overflow: auto;
+      max-height: 68vh;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.5);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    th, td {
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    th {
+      position: sticky;
+      top: 0;
+      background: linear-gradient(135deg, #fef3f2 0%, #fff1f2 100%);
+      color: var(--text);
+      font-weight: 800;
+      z-index: 3;
+      border-bottom: 2px solid var(--accent) !important;
+    }
+    
+    th:first-child {
+      left: 0;
+      z-index: 4;
+      box-shadow: 2px 0 4px rgba(0, 0, 0, 0.03);
+    }
+
+    tbody tr:nth-child(even) td {
+      background: rgba(251, 207, 232, 0.04);
+    }
+
+    tbody td:first-child {
+      font-weight: 800;
+      color: var(--blue);
+      position: sticky;
+      left: 0;
+      background: #ffffff;
+      border-right: 1px solid var(--line);
+      box-shadow: 2px 0 4px rgba(0, 0, 0, 0.03);
+      z-index: 2;
+    }
+    
+    tbody tr:nth-child(even) td:first-child {
+      background: #ffffff;
+    }
+
+    .tiny {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 8px;
+    }
+
+    .error {
+      margin: 16px 20px;
+      color: var(--danger);
+      font-weight: 700;
+    }
+
+    /* Paso-a-paso "wow" con tarjetas + snippets */
+    .step-grid {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    }
+
+    .step {
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 12px;
+      padding: 14px;
+      transition: all 0.3s ease;
+      box-shadow: 0 1px 6px rgba(0, 0, 0, 0.02);
+    }
+    
+    .step:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(236, 72, 153, 0.1);
+      border-color: var(--accent);
+    }
+
+    .step-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .step-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      background: var(--accent);
+      border: 0;
+      color: white;
+      font-weight: 800;
+      flex: 0 0 auto;
+    }
+
+    .step h3 {
+      margin: 0;
+      font-size: 15px;
+    }
+
+    .step p {
+      margin: 0 0 10px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    pre {
+      margin: 0;
+      padding: 12px;
+      background: var(--code-bg);
+      border: 1px solid var(--code-line);
+      border-left: 3px solid var(--accent-purple);
+      border-radius: 8px;
+      overflow: auto;
+      position: relative;
+    }
+
+    code {
+      font-family: "Fira Code", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 12.5px;
+      color: #831843;
+      white-space: pre;
+      line-height: 1.5;
+    }
+    
+    /* Gráficas */
+    .charts-grid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+    }
+    
+    .chart-container {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
+    }
+    
+    .chart-container h3 {
+      margin: 0 0 12px 0;
+      font-size: 15px;
+      color: var(--text);
+      font-weight: 700;
+    }
+    
+    .chart-wrapper {
+      position: relative;
+      height: 300px;
+    }
+
+    .heatmap-grid {
+      display: grid;
+      grid-template-columns: 140px repeat(10, minmax(58px, 1fr));
+      gap: 6px;
+      align-items: stretch;
+      height: 100%;
+      overflow: auto;
+      padding-right: 4px;
+    }
+
+    .heatmap-cell {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      min-height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      color: #1f2937;
+      text-align: center;
+      padding: 4px;
+      line-height: 1.2;
+      background: #fff;
+    }
+
+    .heatmap-head {
+      font-weight: 700;
+      color: #334155;
+      background: #f8fafc;
+    }
+
+    .heatmap-rowlabel {
+      justify-content: flex-start;
+      padding-left: 8px;
+      font-weight: 700;
+      color: #334155;
+      background: #f8fafc;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+</head>
+<body>
+  <main class="container">
+    <section class="hero">
+      <h1>ACT 2</h1>
+      <div class="subtitle">Iker Deras Jimenez</div>
+    </section>
+
+    <section class="panel">
+      <h2>Resumen de estadísticas</h2>
+      <div class="table-wrap">
+        <table id="tabla-resumen">
+          <thead>
+            <tr>
+              <th>métrica</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Visualizaciones</h2>
+      <div class="charts-grid">
+        <div class="chart-container">
+          <h3>Gráfica de barras: Media por columna clave</h3>
+          <div class="chart-wrapper">
+            <canvas id="chart-bars"></canvas>
+          </div>
+        </div>
+        
+        <div class="chart-container">
+          <h3>Gráfica de dispersión: Media vs Varianza (log)</h3>
+          <div class="chart-wrapper">
+            <canvas id="chart-scatter"></canvas>
+          </div>
+        </div>
+        
+        <div class="chart-container">
+          <h3>Heat map: Intensidad normalizada por métrica</h3>
+          <div class="chart-wrapper">
+            <div id="chart-heatmap" class="heatmap-grid"></div>
+          </div>
+        </div>
+        
+        <div class="chart-container">
+          <h3>Matriz de correlación</h3>
+          <div class="chart-wrapper">
+            <canvas id="chart-correlation"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Cómo lo hicimos (paso a paso)</h2>
+      <div class="step-grid">
+        <article class="step">
+          <div class="step-head">
+            <span class="step-num">1</span>
+            <h3>Lectura robusta (NDJSON o JSON concatenado)</h3>
+          </div>
+          <p>Primero detectamos el formato del archivo y lo leemos en streaming (sin cargar todo en memoria).</p>
+          <pre><code>def read_events(path, encoding="utf-8"):
+    use_ndjson = _looks_like_ndjson(path, encoding)
+    with open(path, "r", encoding=encoding, errors="replace") as fp:
+        if use_ndjson:
+            yield from iter_ndjson(fp)
+        else:
+            yield from iter_concatenated_json(fp)
+</code></pre>
+        </article>
+
+        <article class="step">
+          <div class="step-head">
+            <span class="step-num">2</span>
+            <h3>Procesamiento por chunks + normalización a tablas</h3>
+          </div>
+          <p>Acumulamos eventos en memoria por lotes, los normalizamos y sacamos 3 tablas: <strong>events</strong>, <strong>faces</strong> y <strong>sources</strong>.</p>
+          <pre><code># CLI: streaming + flush por chunk
+records_iter = chain.from_iterable(read_events(p) for p in input_paths)
+for rec in records_iter:
+    chunk_records.append(rec)
+    if len(chunk_records) >= chunk_size:
+        events_df, faces_df, sources_df = normalize(chunk_records)
+        chunk_records.clear()
+</code></pre>
+        </article>
+
+        <article class="step">
+          <div class="step-head">
+            <span class="step-num">3</span>
+            <h3>Columnas clave para el análisis</h3>
+          </div>
+          <p>Para mantener coherencia entre tabla y visualizaciones, usamos un conjunto fijo de columnas numéricas (las mismas que se ven en el heat map):</p>
+          <ul>
+            <li><strong>estado</strong>, <strong>decode</strong>, <strong>detect</strong>, <strong>refine</strong>, <strong>vector</strong>, <strong>commit</strong>, <strong>entire</strong>, <strong>fuentes_co</strong>, <strong>rostros_co</strong>, <strong>tiempo_epo</strong>.</li>
+          </ul>
+          <p>En el dataset, algunas vienen con nombre técnico (por ejemplo <code>fuentes_count</code>, <code>rostros_count</code>, <code>tiempo_epoch_ms</code>) y en la UI se muestran con alias cortos.</p>
+        </article>
+
+        <article class="step">
+          <div class="step-head">
+            <span class="step-num">4</span>
+            <h3>DuckDB: leer JSONL y calcular estadísticas</h3>
+          </div>
+          <p>Cargamos los JSONL como vistas y calculamos estadísticas descriptivas y correlaciones numéricas; la salida se consolida en <strong>stats.json</strong> (por ejemplo: <code>events.stats</code> y <code>events.correlation</code>).</p>
+          <pre><code>con = duckdb.connect(database=":memory:")
+con.execute(
+  "CREATE OR REPLACE VIEW events AS "
+  "SELECT * FROM read_json_auto('events.jsonl', format='newline_delimited')"
+)
+
+SELECT AVG(col), VAR_POP(col), MEDIAN(col), SKEWNESS(col), KURTOSIS(col)
+FROM events;
+</code></pre>
+        </article>
+
+        <article class="step">
+          <div class="step-head">
+            <span class="step-num">5</span>
+            <h3>Salida final: stats.json → tabla en la web</h3>
+          </div>
+          <p>El navegador sólo consume <strong>stats.json</strong> y renderiza la tabla y las gráficas usando el mismo set de 10 columnas clave.</p>
+          <pre><code>// Frontend
+const res = await fetch("../stats.json", { cache: "no-store" });
+const data = await res.json();
+
+renderMatrix(data);
+renderBarChart(data);
+renderScatterChart(data);
+renderHeatmap(data);
+renderCorrelationMatrix(data);
+</code></pre>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const CORE_COLUMNS = [
+      { key: "estado", label: "estado" },
+      { key: "decode", label: "decode" },
+      { key: "detect", label: "detect" },
+      { key: "refine", label: "refine" },
+      { key: "vector", label: "vector" },
+      { key: "commit", label: "commit" },
+      { key: "entire", label: "entire" },
+      { key: "fuentes_count", label: "fuentes_co" },
+      { key: "rostros_count", label: "rostros_co" },
+      { key: "tiempo_epoch_ms", label: "tiempo_epo" }
+    ];
+
+    const ROW_METRICS = ["media", "varianza", "mediana", "moda", "kurtosis", "sesgo"];
+
+    function fmt(val) {
+      if (val === null || val === undefined || Number.isNaN(val)) return "—";
+      if (typeof val === "number") return Number.isInteger(val)
+        ? val.toLocaleString("es-MX")
+        : val.toLocaleString("es-MX", { maximumFractionDigits: 6 });
+      return String(val);
+    }
+
+    function fmtEpochMs(v) {
+      if (v === null || v === undefined || Number.isNaN(v)) return "—";
+      const d = new Date(Number(v));
+      if (Number.isNaN(d.getTime())) return fmt(v);
+      return `${fmt(v)} (${d.toISOString()})`;
+    }
+
+    function getCoreStats(events) {
+      const stats = events?.stats || [];
+      return CORE_COLUMNS.map(col => ({
+        ...col,
+        stat: stats.find(s => s.column === col.key) || null
+      }));
+    }
+
+    function getPresentCoreStats(events, { excludeTime = false } = {}) {
+      return getCoreStats(events)
+        .filter(col => col.stat)
+        .filter(col => !excludeTime || col.key !== "tiempo_epoch_ms");
+    }
+
+    function valueFor(metric, colKey, stat) {
+      if (!stat) return "—";
+      const isEpoch = colKey === "tiempo_epoch_ms";
+      if (metric === "media") return isEpoch ? fmtEpochMs(stat.mean) : fmt(stat.mean);
+      if (metric === "varianza") return fmt(stat.variance);
+      if (metric === "mediana") return isEpoch ? fmtEpochMs(stat.median) : fmt(stat.median);
+      if (metric === "moda") return isEpoch ? fmtEpochMs(stat.mode) : fmt(stat.mode);
+      if (metric === "kurtosis") return fmt(stat.kurtosis);
+      if (metric === "sesgo") return fmt(stat.skewness);
+      return "—";
+    }
+
+    function renderMatrix(data) {
+      const events = data?.events || {};
+      const coreStats = getCoreStats(events);
+
+      const headRow = document.querySelector("#tabla-resumen thead tr");
+      headRow.innerHTML = "";
+
+      const metricHead = document.createElement("th");
+      metricHead.textContent = "métrica";
+      headRow.appendChild(metricHead);
+
+      coreStats.forEach(col => {
+        const th = document.createElement("th");
+        th.textContent = col.label;
+        headRow.appendChild(th);
+      });
+
+      const tbody = document.querySelector("#tabla-resumen tbody");
+      tbody.innerHTML = "";
+
+      ROW_METRICS.forEach(metric => {
+        const tr = document.createElement("tr");
+        const tdMetric = document.createElement("td");
+        tdMetric.textContent = metric;
+        tr.appendChild(tdMetric);
+
+        coreStats.forEach(col => {
+          const td = document.createElement("td");
+          td.textContent = valueFor(metric, col.key, col.stat);
+          tr.appendChild(td);
+        });
+
+        tbody.appendChild(tr);
+      });
+    }
+
+    function renderBarChart(data) {
+      const events = data?.events || {};
+      const coreStats = getPresentCoreStats(events, { excludeTime: true });
+      const labels = coreStats.map(col => col.label);
+      const values = coreStats.map(col => Number((col.stat.mean ?? 0).toFixed(3)));
+
+      const ctx = document.getElementById('chart-bars');
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [{
+            label: 'Media por columna clave',
+            data: values,
+            backgroundColor: [
+              'rgba(59, 130, 246, 0.75)',
+              'rgba(236, 72, 153, 0.75)',
+              'rgba(168, 85, 247, 0.75)',
+              'rgba(34, 197, 94, 0.75)',
+              'rgba(251, 146, 60, 0.75)',
+              'rgba(14, 165, 233, 0.75)',
+              'rgba(59, 130, 246, 0.55)',
+              'rgba(236, 72, 153, 0.55)',
+              'rgba(168, 85, 247, 0.55)'
+            ],
+            borderColor: 'rgba(30, 41, 59, 0.6)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              title: {
+                display: true,
+                text: 'Media'
+              }
+            }
+          }
+        }
+      });
+    }
+
+    function renderScatterChart(data) {
+      const events = data?.events || {};
+      const coreStats = getPresentCoreStats(events, { excludeTime: true });
+      const scatterData = coreStats
+        .map(col => ({
+          x: Math.log10(col.stat.mean),
+          y: Math.log10(col.stat.variance),
+          rawMean: col.stat.mean,
+          rawVariance: col.stat.variance,
+          label: col.label
+        }))
+        .filter(p => Number.isFinite(p.x) && Number.isFinite(p.y));
+
+      const colors = [
+        'rgba(59, 130, 246, 0.6)',
+        'rgba(236, 72, 153, 0.6)',
+        'rgba(168, 85, 247, 0.6)',
+        'rgba(34, 197, 94, 0.6)',
+        'rgba(251, 146, 60, 0.6)'
+      ];
+
+      const ctx = document.getElementById('chart-scatter');
+      new Chart(ctx, {
+        type: 'scatter',
+        data: {
+          datasets: [{
+            label: 'Media vs Varianza (columnas clave)',
+            data: scatterData,
+            backgroundColor: scatterData.map((_, i) => colors[i % colors.length]),
+            borderColor: scatterData.map((_, i) => colors[i % colors.length].replace('0.6', '1')),
+            borderWidth: 2,
+            pointRadius: 8,
+            pointHoverRadius: 10
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: (context) => {
+                  const point = scatterData[context.dataIndex];
+                  return `${point.label}: media=${point.rawMean.toLocaleString('es-MX', { maximumFractionDigits: 4 })}, varianza=${point.rawVariance.toLocaleString('es-MX', { maximumFractionDigits: 4 })}`;
+                }
+              }
+            }
+          },
+          scales: {
+            x: { title: { display: true, text: 'log10(Media)' } },
+            y: { title: { display: true, text: 'log10(Varianza)' } }
+          }
+        }
+      });
+    }
+
+    function renderHeatmap(data) {
+      const events = data?.events || {};
+      const allColumns = getPresentCoreStats(events)
+        .map(col => ({
+          ...col.stat,
+          display: col.label
+        }));
+
+      const metrics = ["varianza", "kurtosis", "sesgo"];
+      const heatData = [];
+
+      const logNorm = (v) => Math.log10(1 + Math.abs(v || 0));
+      const metricValues = {
+        varianza: allColumns.map(col => logNorm(col.variance)),
+        kurtosis: allColumns.map(col => logNorm(col.kurtosis)),
+        sesgo: allColumns.map(col => logNorm(col.skewness))
+      };
+      const metricMax = {
+        varianza: Math.max(...metricValues.varianza, 1),
+        kurtosis: Math.max(...metricValues.kurtosis, 1),
+        sesgo: Math.max(...metricValues.sesgo, 1)
+      };
+
+      allColumns.forEach((col) => {
+        metrics.forEach((metric) => {
+          let value = 0;
+          if (metric === "varianza") value = Math.abs(col.variance || 0);
+          else if (metric === "kurtosis") value = Math.abs(col.kurtosis || 0);
+          else if (metric === "sesgo") value = Math.abs(col.skewness || 0);
+
+          const normalized = logNorm(value) / metricMax[metric];
+          heatData.push({
+            x: (col.display || col.column || 'col').substring(0, 10),
+            y: metric,
+            v: value,
+            n: normalized
+          });
+        });
+      });
+
+      const grid = document.getElementById('chart-heatmap');
+      grid.innerHTML = '';
+
+      const cols = allColumns.map(c => (c.display || c.column || 'col').substring(0, 10));
+      grid.style.gridTemplateColumns = `140px repeat(${cols.length}, minmax(58px, 1fr))`;
+
+      const emptyHead = document.createElement('div');
+      emptyHead.className = 'heatmap-cell heatmap-head';
+      emptyHead.textContent = 'Métrica \\ Columna';
+      grid.appendChild(emptyHead);
+
+      cols.forEach(col => {
+        const head = document.createElement('div');
+        head.className = 'heatmap-cell heatmap-head';
+        head.textContent = col;
+        grid.appendChild(head);
+      });
+
+      metrics.forEach(metric => {
+        const rowLabel = document.createElement('div');
+        rowLabel.className = 'heatmap-cell heatmap-rowlabel';
+        rowLabel.textContent = metric;
+        grid.appendChild(rowLabel);
+
+        cols.forEach(col => {
+          const d = heatData.find(x => x.x === col && x.y === metric);
+          const intensity = d?.n ?? 0;
+          const cell = document.createElement('div');
+          cell.className = 'heatmap-cell';
+          cell.style.backgroundColor = `rgba(236, 72, 153, ${0.08 + intensity * 0.82})`;
+          cell.textContent = d ? d.v.toLocaleString('es-MX', { maximumFractionDigits: 2 }) : '—';
+          cell.title = d ? `${metric} • ${col}: ${d.v.toLocaleString('es-MX', { maximumFractionDigits: 6 })}` : `${metric} • ${col}: sin dato`;
+          grid.appendChild(cell);
+        });
+      });
+    }
+
+    function renderCorrelationMatrix(data) {
+      const events = data?.events || {};
+      const corr = events?.correlation || {};
+      const columns = corr.columns || [];
+      const matrix = corr.matrix || [];
+
+      if (columns.length === 0) return;
+
+      const labelByKey = Object.fromEntries(CORE_COLUMNS.map(c => [c.key, c.label]));
+      const targetIndexes = CORE_COLUMNS
+        .map(c => columns.indexOf(c.key))
+        .filter(i => i >= 0)
+        .filter(i => {
+          const row = matrix[i] || [];
+          return row.some((v, j) => j !== i && v !== null && Number.isFinite(v));
+        });
+
+      const validIndexes = targetIndexes.slice(0, CORE_COLUMNS.length);
+      const corrData = [];
+
+      validIndexes.forEach(i => {
+        validIndexes.forEach(j => {
+          if (matrix[i] && matrix[i][j] !== null) {
+            const val = matrix[i][j];
+            corrData.push({
+              x: (labelByKey[columns[j]] || columns[j]).substring(0, 10),
+              y: (labelByKey[columns[i]] || columns[i]).substring(0, 10),
+              v: val
+            });
+          }
+        });
+      });
+
+      const ctx = document.getElementById('chart-correlation');
+      new Chart(ctx, {
+        type: 'bubble',
+        data: {
+          datasets: [{
+            label: 'Correlación (columnas clave)',
+            data: corrData.map(d => ({
+              x: d.x,
+              y: d.y,
+              r: Math.abs(d.v) * 20 + 5
+            })),
+            backgroundColor: corrData.map(d =>
+              d.v > 0
+                ? `rgba(59, 130, 246, ${Math.abs(d.v) * 0.7 + 0.2})`
+                : `rgba(236, 72, 153, ${Math.abs(d.v) * 0.7 + 0.2})`
+            ),
+            borderColor: corrData.map(d =>
+              d.v > 0 ? 'rgba(59, 130, 246, 1)' : 'rgba(236, 72, 153, 1)'
+            ),
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: (context) => {
+                  const point = corrData[context.dataIndex];
+                  return `Correlación: ${point.v.toFixed(3)}`;
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              type: 'category',
+              title: { display: true, text: 'Columna' }
+            },
+            y: {
+              type: 'category',
+              title: { display: true, text: 'vs Columna' }
+            }
+          }
+        }
+      });
+    }
+
+    async function main() {
+      const res = await fetch("../stats.json", { cache: "no-store" });
+      if (!res.ok) throw new Error(`No se pudo leer stats.json (${res.status})`);
+      const data = await res.json();
+
+      renderMatrix(data);
+
+      try {
+        renderBarChart(data);
+        renderScatterChart(data);
+        renderHeatmap(data);
+        renderCorrelationMatrix(data);
+      } catch (err) {
+        console.error("Error al renderizar gráficas:", err);
+      }
+    }
+
+    main().catch(err => {
+      document.body.insertAdjacentHTML("beforeend", `<p class='error'>Error: ${err.message}</p>`);
+      console.error(err);
+    });
+  </script>
+</body>
+</html>

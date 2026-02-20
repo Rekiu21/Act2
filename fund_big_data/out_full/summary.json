@@ -1,0 +1,16 @@
+{
+  "events": 16000194,
+  "faces": 15994485,
+  "sources": 15999998,
+  "tiempo_min": "2025-07-01T00:51:00.136000",
+  "tiempo_max": "2025-07-05T04:58:51.460000",
+  "input": null,
+  "inputs": [
+    "act 2\\20250701-envases.log",
+    "act 2\\20250702-envases.log",
+    "act 2\\20250703-envases.log",
+    "act 2\\20250704-envases.log",
+    "act 2\\20250705-envases.log"
+  ],
+  "chunk_size": 10000
+}
