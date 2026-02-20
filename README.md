@@ -77,8 +77,3 @@ Luego abre:
 
 - `http://localhost:8000/fund_big_data/out_full/web/index.html`
 
-## Automatización semanal (idea)
-
-- Ejecutar el comando de parse + stats con el Programador de tareas (Windows) o `cron` (Linux/macOS).
-- Guardar salidas por fecha (por ejemplo `out/2026-02-19/`) para trazabilidad.
-- Agregar validaciones al final (conteos esperados, columnas presentes) y logs para auditoría.
